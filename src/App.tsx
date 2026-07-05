@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import DocumentInput from './components/DocumentInput';
 import QuestionBox from './components/QuestionBox';
-import { chunkText } from './lib/chunk';
-import { embed } from './lib/embeddings';
-import { cosineSimilarity, topChunks } from './lib/similarity';
 import { answerQuestion } from './lib/rag';
 import './App.css'
 
@@ -13,8 +10,8 @@ function App() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
 
-  function handleAsk() {
-    const result = answerQuestion(document, question);
+  async function handleAsk() {
+    const result = await answerQuestion(document, question);
     setAnswer(result)
   }
 

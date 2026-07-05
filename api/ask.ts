@@ -1,9 +1,13 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node'
 
-export default async function handler(request, response) {
+export default async function handler(request: VercelRequest, response: VercelResponse) {
 
     const { chunks, question } = request.body
 
     const apiKey = process.env.ANTHROPIC_API_KEY
+    if (!apiKey) {
+        return response.status(500).json({ error: "API key not configured"})
+    }
 
     const apiResponse = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
