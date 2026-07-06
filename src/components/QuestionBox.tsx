@@ -8,6 +8,7 @@ function QuestionBox(props: QuestionProps) {
     return (
         <textarea
         className="text-field"
+        placeholder="Ask your question here"
             value={props.question}
             onChange={(e) => props.onQuestionChange(e.target.value)}
             />

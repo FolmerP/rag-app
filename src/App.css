@@ -2,7 +2,7 @@
 
 body {
   margin: 0;
-  background: #F7F6F3;
+  background: #6F4E37;
   font-family: 'Inter', sans-serif;
   color: #1A1A2E;
 }
@@ -11,6 +11,28 @@ body {
   max-width: 640px;
   margin: 0 auto;
   padding: 48px 24px;
+  background: whitesmoke;
+  border-radius: 20px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.app-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1A1A2E;
+  margin: 0 0 8px 0;
+}
+
+.app-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color:#8A8798;
+  margin: 0;
 }
 
 .text-field {
@@ -18,7 +40,7 @@ body {
   box-sizing: border-box;
   min-height: 80px;
   padding: 12px 14px;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
   border: 1px solid #E0DED8;
   border-radius: 12px;
   font-family: 'Inter', sans-serif;
@@ -28,12 +50,12 @@ body {
 
 .text-field:focus {
   outline: none;
-  border-color: #5B4FE8;
+  border-color: #6F4E37;
   box-shadow: 0 0 0 3px rgba(91, 79, 232, 0.12);
 }
 
 .ask-button {
-  background: #5B4FE8;
+  background: #6F4E37;
   color:  white;
   border: none;
   border-radius: 12px;
@@ -46,7 +68,7 @@ body {
 }
 
 .ask-button:hover {
-  background: #4A3FD0;
+  background: #6F4E37;
 }
 
 .result {
@@ -86,4 +108,13 @@ body {
   font-size: 14px;
   line-height: 1.7;
   color: #3A3A4A;
+}
+
+.field-label {
+  display: block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6F4E37;
+  margin-bottom: 6px;
 }

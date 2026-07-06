@@ -19,6 +19,11 @@ function App() {
 
   return(
     <div>
+      <header className='app-header'>
+        <h1 className='app-title'>Grounded</h1>
+        <p className='app-subtitle'>Get answers with sources</p>
+      </header>
+
     <DocumentInput
     document={document}
     onDocumentChange={setDocument}
@@ -27,7 +32,7 @@ function App() {
     question={question}
     onQuestionChange={setQuestion}
     />
-    <button className='ask-button' onClick={handleAsk}>Spørg</button>
+    <button className='ask-button' onClick={handleAsk}>Ask</button>
 
 {answer && (
   <div className='result'>
