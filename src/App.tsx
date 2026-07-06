@@ -27,18 +27,22 @@ function App() {
     question={question}
     onQuestionChange={setQuestion}
     />
-    <button onClick={handleAsk}>Spørg</button>
+    <button className='ask-button' onClick={handleAsk}>Spørg</button>
 
-    <p>{answer}</p>
-  
-    <div>
-      <h3>Kilder</h3>
+{answer && (
+  <div className='result'>
+    <p className='answer'>{answer}</p>
+
+    <div className='sources'>
+      <span className='sources-label'>Found in the document</span>
       {sources.map((source, index) => (
-        <p key={index}>{source}</p>
+        <p key={index} className='source-mark'></p>
       ))}
+      </div>
     </div>
-    
-    </div>
+)}
+
+   </div>
   )
 
 }

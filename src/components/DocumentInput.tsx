@@ -8,6 +8,7 @@ function DocumentInput(props: DocumentProps) {
     return (
     <div>
         <textarea
+        className="text-field"
             value={props.document}
             onChange={(e) => props.onDocumentChange(e.target.value)}
             />

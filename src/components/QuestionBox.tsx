@@ -7,6 +7,7 @@ type QuestionProps = {
 function QuestionBox(props: QuestionProps) {
     return (
         <textarea
+        className="text-field"
             value={props.question}
             onChange={(e) => props.onQuestionChange(e.target.value)}
             />
