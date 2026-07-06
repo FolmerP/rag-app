@@ -9,10 +9,12 @@ function App() {
   const [document, setDocument] = useState("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [sources, setSources] = useState<string[]>([]);
 
   async function handleAsk() {
     const result = await answerQuestion(document, question);
-    setAnswer(result)
+    setAnswer(result.answer)
+    setSources(result.sources)
   }
 
   return(
@@ -28,9 +30,14 @@ function App() {
     <button onClick={handleAsk}>Spørg</button>
 
     <p>{answer}</p>
-
-    <p>{document.length}</p>
-    <p>{question}</p>
+  
+    <div>
+      <h3>Kilder</h3>
+      {sources.map((source, index) => (
+        <p key={index}>{source}</p>
+      ))}
+    </div>
+    
     </div>
   )
 

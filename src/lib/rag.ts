@@ -2,13 +2,18 @@ import { chunkText } from "./chunk";
 import { askLLM } from "./llm";
 import { topChunks } from "./similarity";
 
-export async function answerQuestion(document: string, question: string): Promise<string> {
+type RagResult = {
+    answer: string
+    sources:string[]
+}
+
+export async function answerQuestion(document: string, question: string): Promise<RagResult> {
     
     const chunks = chunkText(document)
     
-    const best = topChunks(question, chunks, 2)
+    const sources = topChunks(question, chunks, 2)
 
-    const answer = await askLLM(best, question)
+    const answer = await askLLM(sources, question)
 
-    return answer
+    return {answer, sources}
 }
