@@ -36,7 +36,7 @@ function App() {
     <div className='sources'>
       <span className='sources-label'>Found in the document</span>
       {sources.map((source, index) => (
-        <p key={index} className='source-mark'></p>
+        <p key={index} className='source-mark'>{source}</p>
       ))}
       </div>
     </div>
