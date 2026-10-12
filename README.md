@@ -1,75 +1,34 @@
-# React + TypeScript + Vite
+# RAG App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small Retrieval-Augmented Generation (RAG) web app. You give it a document, ask questions about it, and it answers grounded in the document and highlights which passages the answer came from.
 
-Currently, two official plugins are available:
+**[Live demo](https://rag-app-ten-gamma.vercel.app/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it does
 
-## React Compiler
+1. You paste in a document.
+2. You ask a question about it.
+3. The app finds the most relevant passages in the document and sends only those to the language model, along with your question.
+4. The model answers based on those passages and the app shows which passages the answer was drawn from.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## How it works
 
-## Expanding the ESLint configuration
+The retrieval pipeline is written from scratch, with each step in its own module under `src/lib/`:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **`chunk.ts`** — splits the document into smaller passages.
+- **`embeddings.ts`** — turns a chunk (or the question) into a numeric vector so they can be compared.
+- **`similarity.ts`** — cosine similarity between two vectors, plus selecting the top-k most similar chunks.
+- **`rag.ts`** — orchestrates the pipeline: chunk the document, find the best-matching chunks for the question, and ask the model.
+- **`llm.ts`** — calls the app's own backend endpoint with the chosen chunks and the question.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+The call to the language model goes through a serverless proxy (`api/ask.ts`) rather than straight from the browser. The API key lives server-side in an environment variable and is never exposed to the client. The browser only talks to the app's own `/api/ask` endpoint, which forwards the request to the Anthropic API.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Tech stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Frontend:** React + TypeScript
+- **Backend:** Vercel serverless function (`api/ask.ts`)
+- **Model:** Anthropic API
 
-```
+## Known limitations / next steps
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+- The embeddings in `embeddings.ts` are currently a simplified version, so matching is more surface-level than based on real meaning. The main planned improvement is swapping in proper semantic embeddings, because the pipeline is kept in separate layers, that change is contained to `embeddings.ts`.
