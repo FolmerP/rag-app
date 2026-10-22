@@ -1,27 +1,35 @@
 export function chunkText(text: string): string[] {
     const targetSize = 500;
+    const maxSegment = 500;
 
     //split into sentences at . ! or ? 
-    const sentences = text
-        .split(/(?<=[.!?])\s+/)
+    const rawSegments = text
+        .split(/\n+/)
+        .flatMap((line) => line.split(/(?<=[.!?])\s+/))
         .map((s) => s.trim())
         .filter((s) => s.length > 0);
 
-    const chunks: string[] = [];
-    let current = "";
-
-    for (const sentence of sentences) {
-        //if adding this sentence would push past the target size,
-        //close off the current chunk and start a fresh one.
-        if (current.length > 0 && current.length + sentence.length > targetSize) {
-            chunks.push(current);
-            current = sentence;
+    const segments: string[] = [];
+    for (const seg of rawSegments) {
+        if (seg.length <= maxSegment) {
+            segments.push(seg);
         } else {
-            current = current.length === 0 ? sentence : `${current} ${sentence}`;
+            for (let i = 0; i < seg.length; i += maxSegment) {
+                segments.push(seg.slice(i, i + maxSegment));
+            }
         }
     }
 
-    //ensure the final chunk is not lost.
+    const chunks: string[] = [];
+    let current = "";
+    for (const seg of segments) {
+        if (current.length > 0 && current.length + seg.length > targetSize) {
+            chunks.push(current);
+            current = seg;
+        } else {
+            current = current.length === 0 ? seg : `${current} ${seg}`;
+        }
+    }
     if (current.length > 0) {
         chunks.push(current);
     }

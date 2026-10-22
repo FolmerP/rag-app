@@ -56,6 +56,5 @@ npx vercel env add ANTHROPIC_API_KEY development
 - **Multi-part questions.** Retrieval uses a single query vector, so a compound question (e.g. asking about two unrelated facts at once) averages its sub-topics and can miss a passage a focused question would find. Production approaches: query decomposition or multi-query retrieval.
 - **No vector database.** Similarity is computed in memory over one document's chunks, which  fine at this scale. A larger corpus would move to a vector database (e.g. pgvector, Qdrant).
 - **Hand-tuned retrieval parameters.** Chunk size (~500 chars) and `k` (4) are set by feel, not against a labelled eval set yet.
-- **Long sentences.** A single very long sentence isn't split, so it becomes one large chunk.
 - **No rate limiting.** `/api/ask` validates and size-caps input, but proper per-client rate limiting is not made.
 - **Planned:** unit tests (Vitest) for the pure functions and a CI workflow (GitHub Actions) running lint, build and tests; a small retrieval eval (question → expected-passage pairs, scored by hit-rate@k) to tune chunk size and `k` with data; and tracing/observability around the LLM calls.
