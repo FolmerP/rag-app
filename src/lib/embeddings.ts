@@ -1,16 +1,24 @@
+// import { pipeline } from '@huggingface/transformers'
 
-export function embed(text: string): number[] {
+// let embedder: any = null
 
-    const vector = new Array(10).fill(0);
+// export async function embed(text: string): Promise<number[]> {
 
-    for (const char of text) {
+//     if (!embedder) {
+//         embedder = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2')
+//     }
+//     const output = await embedder(text, { pooling: 'mean', normalize: true})
+//     return Array.from(output.data)
+// }
 
-        const code = char.charCodeAt(0);
+let embedder: any = null
 
-        const index = code % 10
-
-        vector[index] += code
-
+export async function embed(text: string): Promise<number[]> {
+    if (!embedder) {
+        // @ts-ignore - loades fra CDN, uden for Vites bundler
+        const { pipeline } = await import(/* @vite-ignore */ 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.1')
+        embedder = await pipeline('feature-extraction', 'Xenova/paraphrase-multilingual-MiniLM-L12-v2')
     }
-    return vector;
+    const output = await embedder(text, { pooling: 'mean', normalize: true })
+    return Array.from(output.data)
 }

@@ -5,6 +5,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     const { chunks, question } = request.body
 
     const apiKey = process.env.ANTHROPIC_API_KEY
+    console.log('API key present:', !!apiKey, '| length:', apiKey?.length)
     if (!apiKey) {
         return response.status(500).json({ error: "API key not configured"})
     }
@@ -17,7 +18,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
             "content-type": "application/json"
          },
         body: JSON.stringify({
-            model: "claude-sonnet-4-5",
+            model: "claude-sonnet-5-5",
             max_tokens: 1000,
             messages: [
                 { role: "user", content: `Her er nogle uddrag fra et dokument: ${chunks.join(";" )}. Svar på dette spørgsmål: ${question} udelukkende ud fra uddragene.`}

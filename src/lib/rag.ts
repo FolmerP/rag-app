@@ -11,7 +11,7 @@ export async function answerQuestion(document: string, question: string): Promis
     
     const chunks = chunkText(document)
     
-    const sources = topChunks(question, chunks, 2)
+    const sources = await topChunks(question, chunks, 2)
 
     const answer = await askLLM(sources, question)
 

@@ -10,11 +10,14 @@ function App() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [sources, setSources] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   async function handleAsk() {
+    setLoading(true)
     const result = await answerQuestion(document, question);
     setAnswer(result.answer)
     setSources(result.sources)
+    setLoading(false)
   }
 
   return(
@@ -32,7 +35,9 @@ function App() {
     question={question}
     onQuestionChange={setQuestion}
     />
-    <button className='ask-button' onClick={handleAsk}>Ask</button>
+    <button className='ask-button' onClick={handleAsk} disabled={loading}>
+      {loading ? "Thinking..." : "Ask"}
+      </button>
 
 {answer && (
   <div className='result'>

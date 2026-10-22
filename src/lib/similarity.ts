@@ -23,9 +23,15 @@ export function cosineSimilarity(a: number[], b: number[]): number {
     return dotP / (lengthA * lengthB);
 }
 
-export function topChunks(question:string, chunks: string[], k: number): string[] {
+export async function topChunks(question:string, chunks: string[], k: number): Promise<string[]> {
+    const questionVector = await embed(question);
 
-    const scored = chunks.map((chunk) => ({chunk: chunk, score: cosineSimilarity(embed(question), embed(chunk))}))
+    const scored = await Promise.all(
+        chunks.map(async (chunk) => ({
+            chunk: chunk,
+            score: cosineSimilarity(questionVector, await embed(chunk))
+        }))
+    );
 
-    return scored.sort((x, y) => y.score - x.score).slice(0,k).map((item) => item.chunk)
+    return scored.sort((x, y) => y.score - x.score).slice(0,k).map((item) => item.chunk);
 }
