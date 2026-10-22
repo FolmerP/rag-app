@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import DocumentInput from './components/DocumentInput';
 import QuestionBox from './components/QuestionBox';
-import { answerQuestion } from './lib/rag';
+import { answerQuestion, buildIndex } from './lib/rag';
+import type { Indexed } from './lib/similarity';
 import './App.css'
 
 
@@ -11,13 +12,31 @@ function App() {
   const [answer, setAnswer] = useState("");
   const [sources, setSources] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [index, setIndex] = useState<Indexed[]>([]);
+  const [indexedDoc, setIndexedDoc] = useState("");
+  const [error, setError] = useState("");
 
   async function handleAsk() {
     setLoading(true)
-    const result = await answerQuestion(document, question);
-    setAnswer(result.answer)
-    setSources(result.sources)
-    setLoading(false)
+    setError("");
+    try {
+      let currentIndex = index;
+      //rebuild only if the document has changed
+      if (indexedDoc !== document){
+        currentIndex = await buildIndex(document);
+        setIndex(currentIndex);
+        setIndexedDoc(document);
+      }
+      const result = await answerQuestion(currentIndex, question);
+      setAnswer(result.answer);
+      setSources(result.sources);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong");
+      setAnswer("");
+      setSources([]);
+    } finally {
+      setLoading(false)
+    }
   }
 
   return(
@@ -38,6 +57,11 @@ function App() {
     <button className='ask-button' onClick={handleAsk} disabled={loading}>
       {loading ? "Thinking..." : "Ask"}
       </button>
+{error && (
+  <div className='error'>
+    <p>{error}</p>
+    </div>
+)}
 
 {answer && (
   <div className='result'>
@@ -46,7 +70,9 @@ function App() {
     <div className='sources'>
       <span className='sources-label'>Found in the document</span>
       {sources.map((source, index) => (
-        <p key={index} className='source-mark'>{source}</p>
+        <p key={index} className='source-line'>
+          <span className='source-mark'><strong>[{index+1}]</strong>{source}</span>
+        </p>
       ))}
       </div>
     </div>

@@ -1,21 +1,30 @@
-
 export function chunkText(text: string): string[] {
-      const chunkSize = 275;
-      const overlap = 65;
-      const step = chunkSize - overlap;
+    const targetSize = 500;
 
-      const chunks: string[] = []
+    //split into sentences at . ! or ? 
+    const sentences = text
+        .split(/(?<=[.!?])\s+/)
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
 
-      for (let i = 0; i < text.length; i += step ){
-            let curChunk = text.slice(i, i + chunkSize);
-            curChunk = curChunk.trim();
+    const chunks: string[] = [];
+    let current = "";
 
-            if (curChunk.length > 0){
-            chunks.push(curChunk)
-            }
-      }
+    for (const sentence of sentences) {
+        //if adding this sentence would push past the target size,
+        //close off the current chunk and start a fresh one.
+        if (current.length > 0 && current.length + sentence.length > targetSize) {
+            chunks.push(current);
+            current = sentence;
+        } else {
+            current = current.length === 0 ? sentence : `${current} ${sentence}`;
+        }
+    }
 
-      return chunks
+    //ensure the final chunk is not lost.
+    if (current.length > 0) {
+        chunks.push(current);
+    }
 
-} 
-
+    return chunks;
+}

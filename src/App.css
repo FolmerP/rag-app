@@ -97,8 +97,11 @@ body {
   margin-bottom: 12px;
 }
 
+.source-line {
+  margin: 0 0 14px 0;
+}
+
 .source-mark {
-  display: inline;
   background: linear-gradient(120deg, #FFE9A8 0%, #FFE9A8 100%);
   background-repeat: no-repeat;
   background-size: 100% 45%;
@@ -117,4 +120,14 @@ body {
   font-weight: 600;
   color: #6F4E37;
   margin-bottom: 6px;
+}
+
+.error {
+  margin-top: 16px;
+  padding: 10px 14px;
+  background: #fdecea;
+  border-left: 3px solid #d9534f;
+  border-radius: 4px;
+  color: #a12d26;
+  font-size: 14px;
 }
