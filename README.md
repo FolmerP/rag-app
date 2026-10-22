@@ -1,6 +1,6 @@
 # Grounded
 
-A small Retrieval-Augmented Generation (RAG) web app. You give it a document, ask questions about it, and it answers grounded in the document. Citing the exact passages each answer is drawn from, and saying clearly when the answer isn't in the document.
+A small Retrieval-Augmented Generation (RAG) web app. You give it a document, ask questions about it, and it answers grounded in the document, citing the exact passages each answer is drawn from, and saying clearly when the answer isn't in the document.
 
 **[Live demo](https://rag-app-ten-gamma.vercel.app/)**
 
@@ -54,7 +54,7 @@ npx vercel env add ANTHROPIC_API_KEY development
 ## Known limitations / next steps
 
 - **Multi-part questions.** Retrieval uses a single query vector, so a compound question (e.g. asking about two unrelated facts at once) averages its sub-topics and can miss a passage a focused question would find. Production approaches: query decomposition or multi-query retrieval.
-- **No vector database.** Similarity is computed in memory over one document's chunks, which  fine at this scale. A larger corpus would move to a vector database (e.g. pgvector, Qdrant).
+- **No vector database.** Similarity is computed in memory over one document's chunks, which is fine at this scale. A larger corpus would move to a vector database (e.g. pgvector, Qdrant).
 - **Hand-tuned retrieval parameters.** Chunk size (~500 chars) and `k` (4) are set by feel, not against a labelled eval set yet.
-- **No rate limiting.** `/api/ask` validates and size-caps input, but proper per-client rate limiting is not made.
+- **No rate limiting.** `/api/ask` validates and size-caps input, but proper per-client rate limiting isn't implemented yet.
 - **Planned:** unit tests (Vitest) for the pure functions and a CI workflow (GitHub Actions) running lint, build and tests; a small retrieval eval (question → expected-passage pairs, scored by hit-rate@k) to tune chunk size and `k` with data; and tracing/observability around the LLM calls.
